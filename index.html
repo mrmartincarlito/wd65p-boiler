@@ -1,77 +1,27 @@
 <!DOCTYPE html>
-<html lang="html">
-
-<head>
-    <title>TITLE</title>
-    <link rel="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script src="test.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-
-    <style>
-@media only screen and (max-width: 600px) {
-    div {
-        font-size : 10px;
-    }
-}
-.parent {
-display: grid;
-grid-template-columns: repeat(12, 1fr);
-grid-template-rows: repeat(10, 1fr);
-grid-column-gap: 0px;
-grid-row-gap: 0px;
-}
-
-.div1 { grid-area: 1 / 1 / 2 / 13; }
-.div2 { grid-area: 2 / 1 / 11 / 4; }
-.div3 { grid-area: 2 / 4 / 9 / 13; }
-.div4 { grid-area: 9 / 4 / 11 / 13; }
-
-
-        div {
-            border-color: black;
-            border-style: solid;
-        }
-
-    </style>
-</head>
-
-<body>
-
-    <div class="parent">
-        <div class="div1"> HEADER</div>
-        <div class="div2"> NAVIGATION</div>
-        <div class="div3"> 
-            <form>  
-                <table>
-                    <tr>
-                        <td><p id="response"></p></td>
-                        <td>You are now logged in: <b id="loggedInUser"></b></td>
-                    </tr>
-                    <tr>
-                        <td>username</td>
-                        <td><input type="text" name="username" id="username" required/></td>
-                    </tr>
-                    <tr>
-                        <td>password</td>
-                        <td><input type="password" name="password" id="password"/></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><button type="button" onclick="submitSampleJson()">SUBMIT</button></td>
-                    </tr>
-                </table>
-            </form>
-
-            <!-- <button type="button" onclick="test()">Create Element p</button> -->
-
-            <div id="container">
-
-            </div>
-
-        </div>
-        <div class="div4" id="footer"> FOOTER </div>
-    </div>
-</body>
-
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="pages/login/script.js"></script>
+    </head>
+    <body>
+        <center>
+            <h1>Welcome to My Website</h1>
+            <span style="color : red" id="response"></span>
+            <table>
+                <tr>
+                    <td>Username</td>
+                    <td><input type="text" name="username" id="username" required/></td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td><input type="password" name="password" id="password"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button type="button" onclick="login()">LOGIN</button></td>
+                </tr>
+            </table>
+        </center>
+    </body>
 </html>
