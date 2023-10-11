@@ -1,45 +1,83 @@
 <?php
-session_start();
+include "config.php";
 
 if (isset($_GET['index'])) {
-    echo json_encode($_SESSION['response']); //response()->json(Accounts::all());
+    $sqlAccountsQuery = "SELECT * FROM `tbl_accounts` where role is not null";
+    $result = $conn->query($sqlAccountsQuery);
+
+    $response = array();
+
+    while ($row = $result->fetch_assoc()) {
+        array_push($response, $row);
+    }
+
+    echo json_encode($response); //response()->json(Accounts::all());
 }
 
 
 if (isset($_POST['store'])) { //function store(Request $request)
     $request = json_decode($_POST['store']);
 
-    /**
-     * Accounts::create(
-     *  --insert array here
-     * );
-     */
     $newAccount = array(
-        "id" => count($_SESSION['response']) + 1,
-        "first_name" => $request->first_name,
-        "last_name" => $request->last_name,
-        "middle_name" => $request->middle_name
+        "username" => $request->username,
+        "password" => $request->password,
+        "role" => $request->role
     );
 
-    $newResponse = $_SESSION["response"];
-    array_push($newResponse, $newAccount);
-    $_SESSION["response"] = $newResponse;
+    $isInserted = $conn->query("INSERT INTO `tbl_accounts`(`username`, `password`, `role`) VALUES ('{$newAccount['username']}','{$newAccount['password']}','{$newAccount['role']}')");
 
-    echo json_encode($_SESSION['response']); //response()->json(Accounts::all());
+    $response = array();
+
+    if ($isInserted) {
+        $response["message"] = "Inserted";
+        $response["status"] = 200;
+    } else {
+        $response["message"] = "Username already exist";
+        $response["status"] = 400;
+    }
+    echo json_encode($response);
 
 }
 
 if (isset($_POST['update'])) {
-    $id = $_POST['id'];
-    $data = json_decode($_POST['update']);
+    $username = $_POST['id'];
+    $request = json_decode($_POST['update']);
 
-    //$account = Account:findOrFail($id);
+    $newAccount = array(
+        "username" => $request->username,
+        "password" => $request->password,
+        "role" => $request->role
+    );
+
+    $isUpdated = $conn->query("UPDATE `tbl_accounts` SET `password`='{$newAccount['password']}',`role`='{$newAccount['role']}' WHERE username = '$username'");
+
+    $response = array();
+
+    if ($isUpdated) {
+        $response["message"] = "Updated";
+        $response["status"] = 200;
+    } else {
+        $response["message"] = "Failed";
+        $response["status"] = 400;
+    }
+    echo json_encode($response);
 }
 
 if (isset($_POST['destroy'])) {
-    $id = $_POST['id'];
+    $username = $_POST['destroy'];
 
-    //$account = Accound::findOrFail($id);
-    //$accound->delete();
+    $isDeleted = $conn->query("DELETE FROM `tbl_accounts` WHERE username = '$username'");
+
+    $response = array();
+
+    if ($isDeleted) {
+        $response["message"] = "Deleted";
+        $response["status"] = 200;
+    } else {
+        $response["message"] = "Failed";
+        $response["status"] = 400;
+    }
+    echo json_encode($response);
+
 }
 ?>

@@ -15,9 +15,9 @@ function index() {
             for (let i = 0; i<jsonResponse.length; i++) {
                 tbody += "<tr>" +
                     "<td>" +jsonResponse[i].id + "</td>" +
-                    "<td>" +jsonResponse[i].first_name + "</td>" +
-                    "<td>" +jsonResponse[i].last_name + "</td>" +
-                    "<td>" +jsonResponse[i].middle_name + "</td>" +
+                    "<td>" +jsonResponse[i].username + "</td>" +
+                    "<td>" +jsonResponse[i].password + "</td>" +
+                    "<td>" +jsonResponse[i].role + "</td>" +
                 "</tr>";
             }
 
@@ -34,9 +34,9 @@ function index() {
 function store() {
 
     let payload = {
-        "first_name" : $("#first_name").val(),
-        "middle_name" : $("#middle_name").val(),
-        "last_name" : $("#last_name").val()
+        "username" : $("#username").val(),
+        "password" : $("#password").val(),
+        "role" : $("#role").val()
     };
 
     $.ajax({
@@ -44,7 +44,14 @@ function store() {
         "type" : "POST", //GET and POST 
         "data" : "store=" + JSON.stringify(payload),
         "success" : function (response) { //success yung response
-            index();    
+            let jsonResponse = JSON.parse(response);
+
+            alert(jsonResponse.message)
+
+            if (jsonResponse.status == 200) {
+                index();
+            }
+            
         },
         "error" : function (xhr, status, error) { //error yung response
             alert("Error")
@@ -54,12 +61,12 @@ function store() {
 
 function update() {
     let payload = {
-        "first_name" : $("#first_name").val(),
-        "middle_name" : $("#middle_name").val(),
-        "last_name" : $("#last_name").val()
+        "username" : $("#username").val(),
+        "password" : $("#password").val(),
+        "role" : $("#role").val()
     };
 
-    let id = 1;
+    let id = $("#username").val();
 
     $.ajax({
         "url" : ACCOUNTS_API, //URL of the API
@@ -76,7 +83,14 @@ function update() {
 }
 
 function destroy() {
-    let id = 1;
+
+
+    if (!confirm("Are you sure you want to delete?")) {
+        return;
+    }
+
+
+    let id = $("#username").val();
 
     $.ajax({
         "url" : ACCOUNTS_API, //URL of the API

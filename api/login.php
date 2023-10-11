@@ -1,64 +1,22 @@
 <?php
-session_start();
-/**
- * @TODO 
- * Select * from ACCOUNTS
- * 
- * Accounts::all();
- */
-$_SESSION["response"] = array(
-    array(
-        "id" => 1,
-        "first_name" => "Eric",
-        "last_name" => "Yuzon",
-        "middle_name" => "Manalang"
-    ),
-    array(
-        "id" => 2,
-        "first_name" => "Joven",
-        "last_name" => "Ison",
-        "middle_name" => "Motul"
-    ),
-    array(
-        "id" => 3,
-        "first_name" => "Edward",
-        "last_name" => "Parinas",
-        "middle_name" => ""
-    ),
-    array(
-        "id" => 4,
-        "first_name" => "Jerry",
-        "last_name" => "Joy",
-        "middle_name" => "Ismael"
-    )
-);
+include "config.php";
+
 if (isset($_POST['auth'])) {
     $data = json_decode($_POST['auth']);
 
   $username = $data->username;
   $password = $data->password;
 
-  $accounts = array(
-    array(
-      "username" => "royce",
-      "password" => "royce123"
-    ),
-    array(
-      "username" => "angelo",
-      "password" => "angelo123"
-    ),
-    array(
-      "username" => "joven",
-      "password" => "joven123"
-    ),
-  );
-
   $response = array();
   
+  $sqlAccountsQuery = "SELECT * FROM `tbl_accounts` where username = '$username'";
+  $result = $conn->query($sqlAccountsQuery);
+
   $message = "";
-  foreach ($accounts as $account) {
-    if ($account["username"] === $username) {
-      if ($account["password"] === $password) {
+
+  if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+      if ($row["password"] === $password) {
         $message = "you are now logged in $username";
         $response = array(
           "status" => 200,
@@ -69,14 +27,15 @@ if (isset($_POST['auth'])) {
       } else {
         $message = "Invalid Password";
         $response = array(
-          "status" => 400,
+          "status" => 500,
           "title" => "Error",
           "message" => $message,
-          "username" => ""
+          "username" => $username
         );
       }
-      break;
-    } else {
+    } 
+
+  } else {
       $message = "username not found in our database";
       $response = array(
         "status" => 500,
@@ -84,10 +43,7 @@ if (isset($_POST['auth'])) {
         "message" => $message,
         "username" => ""
       );
-    }
   }
-  
-
 
   echo json_encode($response);
 }
